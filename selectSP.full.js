@@ -21,6 +21,9 @@
         var ul_dropdownmenu = 'options_selectSP_'+ dvName;
 
         return this.each( function() {
+            $(this)[0].style.display = 'none';
+            $(this)[0].offsetHeight;
+            $(this)[0].style.display = '';
             if (settings.data != null) {
                 if (settings.DivAlreadyCreated == false){
                     $(this).append('<input id="'+ input_searchinput +'" name="'+ input_searchinput +'" class="form-control col-md-12" spellcheck="false" />');
@@ -169,7 +172,5 @@
                 $('.disabled').css('opacity', '0.6');
             }
         });
- 
     };
- 
 }( jQuery ));
