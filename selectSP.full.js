@@ -21,6 +21,7 @@
         var ul_dropdownmenu = 'options_selectSP_'+ dvName;
 
         return this.each( function() {
+
             $(this)[0].style.display = 'none';
             $(this)[0].offsetHeight;
             $(this)[0].style.display = '';
@@ -31,13 +32,14 @@
                 } else {
                     $('#options_CustomCombo').empty();
                 }
+
                 if (settings.input_IDOption != null) {
                     if (settings.input_IDOption == "0") {
                         if (settings.placeholder != null) {
                             $('#'+input_searchinput).attr('placeholder', settings.placeholder);
                         }
                         $.each(settings.data, function (key, value) {
-                            $('#'+ul_dropdownmenu).append('<li role="option" value="' + value.Value + '"><a>' + value.Text + '</a></li>');
+                            $('#'+ul_dropdownmenu).append('<li role="option" value="' + value.Value + '" class="OptionsClass"><a>' + value.Text + '</a></li>');
                         });
                         if (settings.endSentence != null){
                             $('#'+ul_dropdownmenu).append('<li role="option" style="pointer-events: none; opacity: 0.6;" class="disabled"><a>' + settings.endSentence + '</a></li>');
@@ -49,34 +51,90 @@
                                 $('#'+input_searchinput).attr('data-selectedID', value.Value);
                                 $('#'+input_searchinput).val(value.Text);
                                 IsAlready = "True";
-                            } else {
-                                $('#'+ul_dropdownmenu).append('<li role="option" value="' + value.Value + '"><a>' + value.Text + '</a></li>');
                             }
+                            $('#'+ul_dropdownmenu).append('<li role="option" value="' + value.Value + '" class=OptionsClass"><a>' + value.Text + '</a></li>');
                         });
+
+                        $('.OptionsClass').on('click', function () {
+                            var text = $(this).find('a').html();
+                            var id = $(this).val();
+                            $('#'+input_searchinput).attr('data-selectedID', id);
+                            $('#'+input_searchinput).val(text);
+                        });
+
+                        $('.OptionsClass').css('width', '100%');
+                        $('.OptionsClass').css('background', '#FFFFFF');
+                        $('.OptionsClass').css('line-height', '35px');
+                        $('.OptionsClass').css('font-size', '14px');
+                        $('.OptionsClass').css('padding', '0 10px');
+                        $('.OptionsClass').css('cursor', 'pointer');
+                        $('.OptionsClass').css('list-style', 'none');
+                        $('.OptionsClass').css('position', 'relative');
+                        $('.OptionsClass').css('right', '10px');
+                        $('.OptionsClass').css('margin', '0 0 4px 0');
+
+                        $('.OptionsClass').hover( 
+                            function() {
+                                $(this).css("background", "#aaa")
+                            }, function() {
+                                $(this).css("background", "#FFFFFF");
+                            } 
+                        );
             
                         if (IsAlready == "False") {
                             if ((settings.URLSelectOption_SharepointSource != null)&&(settings.input_IDOption != null)){
+                                $('#'+input_searchinput).attr('disabled', 'disabled');
                                 $('#'+input_searchinput).attr('placeholder', 'Cargando... ');
                                 $.post(settings.URLSelectOption_SharepointSource, {
                                     IDEmployeeSP: settings.input_IDOption
                                 }).done(function (result, textStatus, jqXHR) {
                                     $('#'+ul_dropdownmenu).empty();
                                     $.each(settings.data, function (key, value) {
-                                        $('#'+ul_dropdownmenu).append('<li role="option" value="' + value.Value + '"><a>' + value.Text + '</a></li>');
+                                        $('#'+ul_dropdownmenu).append('<li role="option" value="' + value.Value + '" class="OptionsClass"><a>' + value.Text + '</a></li>');
                                     });
-                                    $('#'+ul_dropdownmenu).append('<li role="option" value="' + result.Value + '"><a>' + result.Text + '</a></li>');
+                                    $('#'+ul_dropdownmenu).append('<li role="option" value="' + result.Value + '" class="OptionsClass"><a>' + result.Text + '</a></li>');
                                     $('#'+input_searchinput).attr('data-selectedID', result.Value);
                                     $('#'+input_searchinput).val(result.Text);
-                                    $('#'+ul_dropdownmenu).append('<li role="option" style="pointer-events: none; opacity: 0.6;" class="disabled">' + settings.endSentence + '</li>');
+                                    $('#'+ul_dropdownmenu).append('<li role="option" style="pointer-events: none; opacity: 0.6;" class="disabled"><a>' + settings.endSentence + '</a></li>');
+                                    $('#'+input_searchinput).removeAttr("disabled");
                                     $('#'+input_searchinput).attr('placeholder', settings.placeholder);
+
+
+                                    $('.OptionsClass').on('click', function () {
+                                        var text = $(this).find('a').html();
+                                        var id = $(this).val();
+                                        $('#'+input_searchinput).attr('data-selectedID', id);
+                                        $('#'+input_searchinput).val(text);
+                                    });
+
+                                    $('.OptionsClass').css('width', '100%');
+                                    $('.OptionsClass').css('background', '#FFFFFF');
+                                    $('.OptionsClass').css('line-height', '35px');
+                                    $('.OptionsClass').css('font-size', '14px');
+                                    $('.OptionsClass').css('padding', '0 10px');
+                                    $('.OptionsClass').css('cursor', 'pointer');
+                                    $('.OptionsClass').css('list-style', 'none');
+                                    $('.OptionsClass').css('position', 'relative');
+                                    $('.OptionsClass').css('right', '10px');
+                                    $('.OptionsClass').css('margin', '0 0 4px 0');
+
+                                    $('.OptionsClass').hover( 
+                                        function() {
+                                            $(this).css("background", "#aaa")
+                                        }, function() {
+                                            $(this).css("background", "#FFFFFF");
+                                        } 
+                                    );
+
                                 }).fail(function (jqXHR, textStatus, errorThrown) {
                                     console.log("Se ha producido un error intentando seleccionar la persona de la presente Entrevista")
                                 }).always(function () {
                                 });
                             }
+
                         } else {
                             if (settings.endSentence != null){
-                                $('#'+ul_dropdownmenu).append('<li role="option" style="pointer-events: none; opacity: 0.6;" class="disabled">' + settings.endSentence + '-- </li>');
+                                $('#'+ul_dropdownmenu).append('<li role="option" style="pointer-events: none; opacity: 0.6;" class="disabled"><a>' + settings.endSentence + '</a></li>');
                             }
                         }
                     }
@@ -107,7 +165,6 @@
                     });
                 }
 
-                //Nose porque cuando entramos editando, no entra aqui
                 $('#'+ul_dropdownmenu +' > li').on('click', function () {
                     var text = $(this).find('a').html();
                     var id = $(this).val();
